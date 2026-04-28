@@ -1,428 +1,444 @@
-<!-- ============== -->
-<!-- Home Template -->
-<!-- ============== -->
+<!DOCTYPE html>
+<html lang="en">
 
-<script type="text/x-template" id='home'>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReciTracker</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-router@3.5.3/dist/vue-router.js"></script>
+</head>
+
+<body>
+  <!-- ============== -->
+  <!-- Home Template -->
+  <!-- ============== -->
+
+  <script type="text/x-template" id='home'>
+
+        <main class="page">
+          <!-- Imgcontainer -->
+          <header class="hero">
+            <div class="herocontainer">
+              <div class="herotext">
+                <h2>
+                  ReciTracker
+                </h2>
+                <h2>
+                  Your home for recipes
+                </h2>
+              </div>
+            </div>
+          </header>
+          
+          <!-- Search bar -->
+          
+          <div class="searchbardiv">
+            <searchbar :recipes="recipes" @update-filters="activeFilters = $event">
+          </searchbar>
+
+          </div>
+
+          <!-- Recipe container -->
+          <section class="recipes">
+
+            <!-- ingredient container -->
+            <div class="ingredientcontainer">
+              <h4>Ingredients</h4>
+              <div class="ingredientlist">
+                <span v-for="(tag, index) in uniqueTag" :key="index" @click="filterBytag(tag)" :class="{ 'ingredientitem': true, 'selected': activeFilters.includes(tag) }">
+                  {{ tag }}
+                </span>
+          
+              </div>
+            </div>
+
+            <!-- recipelist container -->
+              <transition-group name="recipetransition" tag="div" class="recipelist">
+            
+              <!-- Single recipe -->
+                <recipe-card v-for="(recipe, index) in filteredRecipes" :key="recipe.name" :recipe="recipe"> 
+                </recipe-card>
+            
+              </transition-group>
+
+          </section>
+
+        </main>
+
+    </script>
+
+  <!-- =================== -->
+  <!-- End of Home page -->
+  <!-- =================== -->
+
+
+
+
+  <!-- ============== -->
+  <!-- Explore Template -->
+  <!-- ============== -->
+
+  <script type="text/x-template" id='explore'>
 
     <main class="page">
-      <!-- Imgcontainer -->
-      <header class="hero">
-        <div class="herocontainer">
-          <div class="herotext">
-            <h2>
-              Recipedle
-            </h2>
-            <h2>
-              Your home for recipes
-            </h2>
+            <!-- Imgcontainer -->
+            <header class="Exp_hero">
+              <div class="herocontainer">
+                <div class="herotext">
+                  <h2>
+                    Explore
+                  </h2>
+            
+                </div>
+              </div>
+            </header>
+            
+            <!-- Search bar -->
+
+          <div class="searchbardiv">
+            <searchbar :recipes="recipes" @update-filters="updateFiltered">
+          </searchbar>
+            
           </div>
-        </div>
-      </header>
       
-      <!-- Search bar -->
+            <!-- Recipe container -->
+            <section class="Exp_recipes">
       
-      <div class="searchbardiv">
-        <searchbar :recipes="recipes" @update-filters="activeFilters = $event">
-       </searchbar>
-
-      </div>
-
-      <!-- Recipe container -->
-       <section class="recipes">
-
-        <!-- ingredient container -->
-         <div class="ingredientcontainer">
-          <h4>Ingredients</h4>
-           <div class="ingredientlist">
-            <span v-for="(tag, index) in uniqueTag" :key="index" @click="filterBytag(tag)" :class="{ 'ingredientitem': true, 'selected': activeFilters.includes(tag) }">
-              {{ tag }}
-            </span>
+              <!-- recipelist container -->
+              <div class="Exp recipelist">
+                
+                <recipe-card v-for="(recipe, index) in filteredRecipes" :key="index" :recipe="recipe"> 
+                </recipe-card>
+                
+              </div>
       
-          </div>
-         </div>
-
-         <!-- recipelist container -->
-           <transition-group name="recipetransition" tag="div" class="recipelist">
-        
-           <!-- Single recipe -->
-            <recipe-card v-for="(recipe, index) in filteredRecipes" :key="recipe.name" :recipe="recipe"> 
-            </recipe-card>
-        
-          </transition-group>
-
-       </section>
-
-    </main>
-
-</script>
-
-<!-- =================== -->
-<!-- End of Home page -->
-<!-- =================== -->
-
-
-
-
-<!-- ============== -->
-<!-- Explore Template -->
-<!-- ============== -->
-
-<script type="text/x-template" id='explore'>
-
-<main class="page">
-        <!-- Imgcontainer -->
-        <header class="Exp_hero">
-          <div class="herocontainer">
-            <div class="herotext">
-              <h2>
-                Explore
-              </h2>
-        
-            </div>
-          </div>
-        </header>
-        
-        <!-- Search bar -->
-
-      <div class="searchbardiv">
-        <searchbar :recipes="recipes" @update-filters="updateFiltered">
-       </searchbar>
-        
-      </div>
-  
-        <!-- Recipe container -->
-         <section class="Exp_recipes">
-  
-           <!-- recipelist container -->
-           <div class="Exp recipelist">
-             
-            <recipe-card v-for="(recipe, index) in filteredRecipes" :key="index" :recipe="recipe"> 
-            </recipe-card>
-             
-           </div>
-  
-         </section>
-  
-      </main>
-
-</script>
-
-<!-- =================== -->
-<!-- End of Explore page -->
-<!-- =================== -->
-
-
-
-<!-- ============== -->
-<!-- Recipe Detail Template -->
-<!-- ============== -->
-
-<script type="text/x-template" id='recipeDetail'>
-
-<main class="page">
-        <div class="reicpe-page">
-            <section class="recipe-hero">
-                <img src="https://res.cloudinary.com/dckzvbn8n/image/upload/v1746952448/hainanese_chicken_rice_idbkve.jpg" class="img-recipe-hero" alt="Haininese Chicken Rice">
-                <article>
-                    <h2>Haininese Chicekn Rice</h2>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum fuga consequatur recusandae iusto? Facere error aperiam sed quaerat, nisi nihil, libero voluptates molestias dicta ea molestiae deleniti minima rem dolorum!</p>
-                    <!-- recipe icon -->
-                    <div class="recipe-icons">
-                        <!-- single recipe icon -->
-                        <article class="recipe-info">
-                            <i class="fas fa-clock"></i>
-                            <h5>Prep time:</h5>
-                            <p>30 min</p>
-                        </article>
-                        <!-- single recipe icon -->
-                        <article>
-                            <i class="far fa-clock"></i>
-                            <h5>Cook time:</h5>
-                            <p>10 min</p>
-                        </article>
-                        <!-- single recipe icon -->
-                        <article>
-                            <i class="fas fa-user-friends"></i>
-                            <h5>Servings:</h5>
-                            <p>1 servings</p>
-                        </article>
-                    </div>
-                    <!-- recipe tags -->
-                    <div class="recipe-tags">
-                      Tags : <a href="">Rice</a>
-                      <a href="">Chicken</a>
-                    </div>
-
-                </article>
             </section>
-            <!-- recipe content -->
-             <section class="recipe-content">
-              <article>
-                <h4>Instructions</h4>
-                <!-- single instruction -->
-                 <div class="single-instruction">
+      
+          </main>
+
+    </script>
+
+  <!-- =================== -->
+  <!-- End of Explore page -->
+  <!-- =================== -->
+
+
+
+  <!-- ============== -->
+  <!-- Recipe Detail Template -->
+  <!-- ============== -->
+
+  <script type="text/x-template" id='recipeDetail'>
+
+    <main class="page">
+            <div class="reicpe-page">
+                <section class="recipe-hero">
+                    <img src="https://res.cloudinary.com/dckzvbn8n/image/upload/v1746952448/hainanese_chicken_rice_idbkve.jpg" class="img-recipe-hero" alt="Haininese Chicken Rice">
+                    <article>
+                        <h2>Haininese Chicekn Rice</h2>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum fuga consequatur recusandae iusto? Facere error aperiam sed quaerat, nisi nihil, libero voluptates molestias dicta ea molestiae deleniti minima rem dolorum!</p>
+                        <!-- recipe icon -->
+                        <div class="recipe-icons">
+                            <!-- single recipe icon -->
+                            <article class="recipe-info">
+                                <i class="fas fa-clock"></i>
+                                <h5>Prep time:</h5>
+                                <p>30 min</p>
+                            </article>
+                            <!-- single recipe icon -->
+                            <article>
+                                <i class="far fa-clock"></i>
+                                <h5>Cook time:</h5>
+                                <p>10 min</p>
+                            </article>
+                            <!-- single recipe icon -->
+                            <article>
+                                <i class="fas fa-user-friends"></i>
+                                <h5>Servings:</h5>
+                                <p>1 servings</p>
+                            </article>
+                        </div>
+                        <!-- recipe tags -->
+                        <div class="recipe-tags">
+                          Tags : <a href="">Rice</a>
+                          <a href="">Chicken</a>
+                        </div>
+
+                    </article>
+                </section>
+                <!-- recipe content -->
+                <section class="recipe-content">
+                  <article>
+                    <h4>Instructions</h4>
+                    <!-- single instruction -->
+                    <div class="single-instruction">
+                        <header>
+                          <p>Step 1</p>
+                          <div></div>
+                        </header>
+                        <p>
+                          Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus molestiae, mollitia nam sunt numquam debitis, recusandae minus molestias delectus consectetur in nesciunt, ab alias quibusdam soluta laboriosam amet deserunt nihil.
+                        </p>
+                    </div>
+                    <!-- single instruction -->
+                    <div class="single-instruction">
+                      <header>
+                        <p>Step 2</p>
+                        <div></div>
+                      </header>
+                      <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus molestiae, mollitia nam sunt numquam debitis, recusandae minus molestias delectus consectetur in nesciunt, ab alias quibusdam soluta laboriosam amet deserunt nihil.
+                      </p>
+                  </div>
+                  <!-- single instruction -->
+                  <div class="single-instruction">
                     <header>
-                      <p>Step 1</p>
+                      <p>Step 3</p>
                       <div></div>
                     </header>
                     <p>
                       Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus molestiae, mollitia nam sunt numquam debitis, recusandae minus molestias delectus consectetur in nesciunt, ab alias quibusdam soluta laboriosam amet deserunt nihil.
                     </p>
-                 </div>
-                 <!-- single instruction -->
-                 <div class="single-instruction">
-                  <header>
-                    <p>Step 2</p>
-                    <div></div>
-                  </header>
-                  <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus molestiae, mollitia nam sunt numquam debitis, recusandae minus molestias delectus consectetur in nesciunt, ab alias quibusdam soluta laboriosam amet deserunt nihil.
-                  </p>
-               </div>
-               <!-- single instruction -->
-               <div class="single-instruction">
-                <header>
-                  <p>Step 3</p>
-                  <div></div>
-                </header>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus molestiae, mollitia nam sunt numquam debitis, recusandae minus molestias delectus consectetur in nesciunt, ab alias quibusdam soluta laboriosam amet deserunt nihil.
-                </p>
-             </div>
-              </article>
-              <article class="second-column">
-                <div>
-                  <h4>Ingredients</h4>
-                  <p class="single-ingredient">
-                    1 cup of rice
-                  </p>
-                  <p class="single-ingredient">
-                    500g of Chicken Thigh
-                  </p>
-                  <p class="single-ingredient">
-                    1/4 cup of soy sauce
-                  </p>
                 </div>
-                <div>
-                  <h4>Tools</h4>
-                  <p class="single-tool">
-                    Rice cooker
-                  </p>
-                  <p class="single-tool">
-                    Cutting Board
-                  </p><p class="single-tool">
-                    Knife
-                  </p>
-                </div>
-              </article>
-             </section>
-        </div>
+                  </article>
+                  <article class="second-column">
+                    <div>
+                      <h4>Ingredients</h4>
+                      <p class="single-ingredient">
+                        1 cup of rice
+                      </p>
+                      <p class="single-ingredient">
+                        500g of Chicken Thigh
+                      </p>
+                      <p class="single-ingredient">
+                        1/4 cup of soy sauce
+                      </p>
+                    </div>
+                    <div>
+                      <h4>Tools</h4>
+                      <p class="single-tool">
+                        Rice cooker
+                      </p>
+                      <p class="single-tool">
+                        Cutting Board
+                      </p><p class="single-tool">
+                        Knife
+                      </p>
+                    </div>
+                  </article>
+                </section>
+            </div>
 
-    </main>
+        </main>
 
-</script>
+    </script>
 
-<!-- =================== -->
-<!-- End of Recipe Detail page -->
-<!-- =================== -->
-
-
-
-
-<!-- ============== -->
-<!-- Pantry Template -->
-<!-- ============== -->
-
-<script type="text/x-template" id='pantry'>
-
-<main class="page">
-        <h4 class="pantry-h4">Your Pantry</h4>
-
-        
-            <!-- single tag -->
-            <pantry-component></pantry-component>
-             
-
-    </main>
-
-</script>
-
-<!-- =================== -->
-<!-- End of Pantry page -->
-<!-- =================== -->
+  <!-- =================== -->
+  <!-- End of Recipe Detail page -->
+  <!-- =================== -->
 
 
 
-<!-- ===================-->
-<!-- About page HTML -->
-<!-- ================== -->
 
-<script type="text/x-template" id="about">
+  <!-- ============== -->
+  <!-- Pantry Template -->
+  <!-- ============== -->
 
+  <script type="text/x-template" id='pantry'>
 
     <main class="page">
-      <section class="about-page">
-        <article>
-          <h2>We love cooking and we want you to love it too</h2>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque est molestias, adipisci rem eligendi quod dolore excepturi, omnis in reprehenderit ab autem minima totam commodi beatae, harum accusantium consectetur nesciunt.</p>
-          <p>Lorem ipsum dolor sit amet.</p>
-          <router-link to="/explore" class ="aboutbtn">Lets Explore!</router-link>
-        </article>
-        <img src="https://res.cloudinary.com/dckzvbn8n/image/upload/v1746952447/aboutpage_bemlzu.webp" alt="Making Broth" class="img aboutimg">
-      </section>
-        <section class="featured-recipes">
-          <h5 class="featured-title">Look at our favourites</h5>
-          <!-- recipelist container -->
-         <div class="recipelist">
-          
-            <recipe-card v-for="(recipe, index) in recipes" :key="index" :recipe="recipe">
-             </recipe-card>
-         
-         </div>
-        </section>
+            <h4 class="pantry-h4">Your Pantry</h4>
 
-    </main>
+            
+                <!-- single tag -->
+                <pantry-component></pantry-component>
+                
+
+        </main>
+
+    </script>
+
+  <!-- =================== -->
+  <!-- End of Pantry page -->
+  <!-- =================== -->
 
 
 
+  <!-- ===================-->
+  <!-- About page HTML -->
+  <!-- ================== -->
 
-</script>
-
-<!-- =================== -->
-<!-- End of About page -->
-<!-- =================== -->
-
+  <script type="text/x-template" id="about">
 
 
-<!-- =================== -->
-<!-- Recipe card component -->
-<!-- =================== -->
+        <main class="page">
+          <section class="about-page">
+            <article>
+              <h2>We love cooking and we want you to love it too</h2>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque est molestias, adipisci rem eligendi quod dolore excepturi, omnis in reprehenderit ab autem minima totam commodi beatae, harum accusantium consectetur nesciunt.</p>
+              <p>Lorem ipsum dolor sit amet.</p>
+              <router-link to="/explore" class ="aboutbtn">Lets Explore!</router-link>
+            </article>
+            <img src="https://res.cloudinary.com/dckzvbn8n/image/upload/v1746952447/aboutpage_bemlzu.webp" alt="Making Broth" class="img aboutimg">
+          </section>
+            <section class="featured-recipes">
+              <h5 class="featured-title">Look at our favourites</h5>
+              <!-- recipelist container -->
+            <div class="recipelist">
+              
+                <recipe-card v-for="(recipe, index) in recipes" :key="index" :recipe="recipe">
+                </recipe-card>
+            
+            </div>
+            </section>
 
-<script type="text/x-template" id="recipecardstemplate">
-  <!-- Single recipe -->
-<div class="recipe-card" class="Recipe">
+        </main>
+
+
+
+
+    </script>
+
+  <!-- =================== -->
+  <!-- End of About page -->
+  <!-- =================== -->
+
+
+
+  <!-- =================== -->
+  <!-- Recipe card component -->
+  <!-- =================== -->
+
+  <script type="text/x-template" id="recipecardstemplate">
+      <!-- Single recipe -->
+  <div class="recipe-card" class="Recipe">
     <router-link to="/recipeDetail">
-        <img :src="recipe.image" :alt="recipe.name" class="recipeimg">
-        <h5>{{ recipe.name }}</h5>
-        <p>{{ recipe.time }}</p>
+      <img :src="recipe.image" :alt="recipe.name" class="recipeimg">
+      <h5>{{ recipe.name }}</h5>
+      <p>{{ recipe.time }}</p>
     </router-link>
-</div>
-</script>
-
-<!-- =================== -->
-<!-- End of Recipe card component -->
-<!-- =================== -->
-
-
-<!-- =================== -->
-<!-- Search bar component -->
-<!-- =================== -->
-
-<script type="text/x-template" id="searchtemplate">
-  <div class="searchbars">
-    <input type="text" v-model="searchQuery" @input="onSearch" @keyup.enter="addTagFromInput" placeholder="Search recipes...">
-    
-     <transition name="fade">
-       
-      <ul v-if="filteredResults.length && showDropdown" class="dropdown">
-        <li v-for="(result, index) in filteredResults" :key="index" @click="selectResult(result)">   
-          {{ result }}
-        </li>
-      </ul>
-       
-  </transition>
-    
-      <div class="filtertags" v-if="selectedFilters.length">
-        <span v-for="(filter, index) in selectedFilters" :key="index">
-          
-          {{ filter }} 
-          
-          <button @click="removeFilter(filter)">×</button>
-          
-        </span>
-        
-        <button class="reset-btn" @click="resetFilters">Reset</button>
-        
-      </div>
-    
-    <div v-if="!filteredResults.length && showDropdown" class="no-results">
-      No recipes found.
-    </div>
   </div>
+  </script>
 
-</script>
+  <!-- =================== -->
+  <!-- End of Recipe card component -->
+  <!-- =================== -->
 
-<!-- =================== -->
-<!-- End of Search bar component -->
-<!-- =================== -->
 
-<!-- =================== -->
-<!-- Pantry component -->
-<!-- =================== -->
+  <!-- =================== -->
+  <!-- Search bar component -->
+  <!-- =================== -->
 
-<script type="text/x-template" id="pantrytemplate">
+  <script type="text/x-template" id="searchtemplate">
+      <div class="searchbars">
+        <input type="text" v-model="searchQuery" @input="onSearch" @keyup.enter="addTagFromInput" placeholder="Search recipes...">
+        
+        <transition name="fade">
+          
+          <ul v-if="filteredResults.length && showDropdown" class="dropdown">
+            <li v-for="(result, index) in filteredResults" :key="index" @click="selectResult(result)">   
+              {{ result }}
+            </li>
+          </ul>
+          
+      </transition>
+        
+          <div class="filtertags" v-if="selectedFilters.length">
+            <span v-for="(filter, index) in selectedFilters" :key="index">
+              
+              {{ filter }} 
+              
+              <button @click="removeFilter(filter)">×</button>
+              
+            </span>
+            
+            <button class="reset-btn" @click="resetFilters">Reset</button>
+            
+          </div>
+        
+        <div v-if="!filteredResults.length && showDropdown" class="no-results">
+          No recipes found.
+        </div>
+      </div>
 
-    <div class="pantry-wrapper">
+    </script>
+
+  <!-- =================== -->
+  <!-- End of Search bar component -->
+  <!-- =================== -->
+
+  <!-- =================== -->
+  <!-- Pantry component -->
+  <!-- =================== -->
+
+  <script type="text/x-template" id="pantrytemplate">
+
+        <div class="pantry-wrapper">
+          
+          <a v-for="(item, index) in pantryItems" :key="index" href="#" class="pantry">
+            <h5>{{ item.name }}</h5>
+            <p>{{ item.description }}</p>
+            <p><i class="fa-solid fa-hourglass-start"></i>
+              {{ item.time }}
+            </p>
+          </a>
+          
+        </div>
+
+        <div class="pantry-btn">
+          
+          <button class="add-pantrybtn" @click="addItem">
+            <i class="fa-solid fa-plus"></i> Add item
+          </button>
+          
+          <button class="rem-pantrybtn" @click="removeItem">
+            <i class="fa-solid fa-xmark"></i> Remove item
+          </button>
+          
+        </div>
       
-      <a v-for="(item, index) in pantryItems" :key="index" href="#" class="pantry">
-        <h5>{{ item.name }}</h5>
-        <p>{{ item.description }}</p>
-        <p><i class="fa-solid fa-hourglass-start"></i>
-          {{ item.time }}
-        </p>
-      </a>
-      
-    </div>
+    </script>
 
-    <div class="pantry-btn">
-      
-      <button class="add-pantrybtn" @click="addItem">
-        <i class="fa-solid fa-plus"></i> Add item
-      </button>
-      
-      <button class="rem-pantrybtn" @click="removeItem">
-        <i class="fa-solid fa-xmark"></i> Remove item
-      </button>
-      
-    </div>
-  
-</script>
+  <!-- =================== -->
+  <!-- End of Pantry component -->
+  <!-- =================== -->
 
-<!-- =================== -->
-<!-- End of Pantry component -->
-<!-- =================== -->
+  <!-- Start of App -->
 
-<!-- Start of App -->
-
-<div id="app">
+  <div id="app">
 
     <!-- Navigation Bar   -->
 
     <nav class="topnav">
-        <div class="navcenter">
-            <div class="navheader">
+      <div class="navcenter">
+        <div class="navheader">
 
-                <router-link to="/about" class="logo">
-                    <img src="https://res.cloudinary.com/dckzvbn8n/image/upload/v1746952447/logo_u44ix3.png" alt="Logo">
-                </router-link>
+          <router-link to="/about" class="logo">
+            <img src="https://res.cloudinary.com/dckzvbn8n/image/upload/v1746952447/logo_u44ix3.png" alt="Logo">
+          </router-link>
 
-                <div class="navbtn">
-                    <img src="https://res.cloudinary.com/dckzvbn8n/image/upload/v1746952447/Menuoption_azixdv.png"
-                        alt="">
+          <div class="navbtn">
+            <img src="https://res.cloudinary.com/dckzvbn8n/image/upload/v1746952447/Menuoption_azixdv.png" alt="">
 
-                </div>
-            </div>
-
-
-            <div class="topnavlinks">
-
-                <router-link to="/" class="navlink" exact>Home</router-link>
-                <router-link to="/explore" class="navlink">Explore</router-link>
-                <router-link to="/pantry" class="navlink">Pantry</router-link>
-                <router-link to="/about" class="navlink">About</router-link>
-
-            </div>
+          </div>
         </div>
+
+
+        <div class="topnavlinks">
+
+          <router-link to="/" class="navlink" exact>Home</router-link>
+          <router-link to="/explore" class="navlink">Explore</router-link>
+          <router-link to="/pantry" class="navlink">Pantry</router-link>
+          <router-link to="/about" class="navlink">About</router-link>
+
+        </div>
+      </div>
 
     </nav>
 
@@ -434,7 +450,7 @@
 
     <main class="page">
 
-        <router-view></router-view>
+      <router-view></router-view>
 
     </main>
 
@@ -445,17 +461,22 @@
     <!-- Footer  -->
 
     <footer class="footer">
-        <p>&copy; <span id="date"></span>
-            <span class="footerlogo">
-                by Omar Rashad
+      <p>&copy; <span id="date"></span>
+        <span class="footerlogo">
+          by Omar Rashad
 
-            </span>
-        </p>
+        </span>
+      </p>
 
     </footer>
 
     <!--  Footer  -->
 
-</div>
+  </div>
 
-<!-- End of App -->
+  <!-- End of App -->
+  <script src="information.js"></script>
+
+</body>
+
+</html>
