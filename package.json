@@ -1,0 +1,16 @@
+{
+  "name": "recitracker",
+  "version": "1.0.0",
+  "description": "Recipe tracking web app with DevSecOps pipeline",
+  "scripts": {
+    "lint:js": "eslint frontend/information.js",
+    "lint:css": "stylelint frontend/style.css",
+    "lint:html": "html-validate frontend/index.html"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "stylelint": "^16.0.0",
+    "stylelint-config-standard": "^36.0.0",
+    "html-validate": "^8.0.0"
+  }
+}

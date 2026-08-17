@@ -108,3 +108,10 @@ terraform.rc
 
 # Visual Studio Cache
 .vs/
+
+# DevSecOps pipeline artifacts
+.sonar/
+dependency-check-report/
+
+# macOS
+.DS_Store
